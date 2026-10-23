@@ -1,59 +1,115 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover"><title>Contact | Bunifu Digital Agency</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap"><link rel="stylesheet" href="site.css"></head><body><header>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Contact and Free Audit | Bunifu Digital Agency</title>
+<meta name="description" content="Call, WhatsApp or email Bunifu Digital Agency on 0722 822 256 or bunifudigitalagency@gmail.com, or request a free audit.">
+<meta name="theme-color" content="#0A5CFF">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="site.css">
+</head><body>
+<header>
   <div class="wrap nav">
-    <a class="logo" href="index.html" aria-label="Bunifu Digital Agency home"><img class="mark" src="monogram.jpg" alt="" width="67" height="44"><span>BUNIFU<small>DIGITAL AGENCY</small></span></a>
+    <a class="brand" href="index.html" aria-label="Bunifu Digital Agency home"><img src="mark.png" alt="" width="52" height="33"><span><b>BUNIFU</b><small>DIGITAL AGENCY</small></span></a>
     <button class="tgl" id="tgl" aria-expanded="false" aria-controls="links">Menu</button>
     <nav class="links" id="links" aria-label="Main">
-      <a href="services.html">Services</a>
+      <div class="has-sub"><a href="services.html">Services</a>
+        <div class="sub">
+          <a href="services.html">Social media management</a>
+          <a href="services.html">Graphic design &amp; branding</a>
+          <a href="services.html">Digital marketing &amp; ads</a>
+          <a href="services.html">Website development</a>
+        </div>
+      </div>
+      <a href="about.html">Why Bunifu</a>
       <a href="how-we-work.html">How we work</a>
-      <a href="work.html">Work</a>
-      <a href="about.html">About</a>
-      <a aria-current="page" href="contact.html">Contact</a>
-      <a class="btn" href="contact.html">Book a strategy call</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a class="btn primary" href="contact.html">Get a free audit</a>
     </nav>
   </div>
-  <div class="prog" id="prog"></div>
-</header><main id="top"><section class="band contact" id="contact">
-  <div class="wrap contact-grid">
+</header>
+<main id="top">
+<section class="band audit" id="audit">
+  <div class="wrap audit-grid">
     <div>
-      <p class="eyebrow" style="color:var(--deep-accent)">Let's talk</p>
-      <h1 class="h2" style="margin-top:14px">Let's build your growth engine.</h1>
-      <p class="lede">Book a strategy call. We will run a free marketing audit, map your biggest opportunities and show you exactly how we would grow your brand.</p>
-      <div class="details">
-        <div><small>Email</small><span>hello@yourdomain.co.ke</span></div>
-        <div><small>Phone / WhatsApp</small><span>+254 7XX XXX XXX</span></div>
-        <div><small>Office</small><span>Nairobi, Kenya</span></div>
+      <p class="eyebrow">Free audit</p>
+      <h1>Tell us about your business. We will show you where to start.</h1>
+      <p class="lede">Fill in the form and it opens a ready-made WhatsApp message to us. We reply with next steps.</p>
+      <ul class="checks">
+        <li>A review of your current social media and website</li>
+        <li>Three practical ideas you can use straight away</li>
+        <li>A quote only if you ask for one</li>
+      </ul>
+    </div>
+    <div>
+      <form id="aform" novalidate>
+        <div class="row2">
+          <label for="f-name">Your name<input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name" role="alert"></span></label>
+          <label for="f-phone">Phone or WhatsApp<input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="07xx xxx xxx" required><span class="err" id="e-phone" role="alert"></span></label>
+        </div>
+        <label for="f-svc">What do you need help with?
+          <select id="f-svc" name="svc">
+            <option>Social media management</option>
+            <option>Graphic design and branding</option>
+            <option>Digital marketing and ads</option>
+            <option>Website development</option>
+            <option>Search and local visibility</option>
+            <option>Short video and content</option>
+            <option>Not sure yet</option>
+          </select>
+        </label>
+        <label for="f-biz">Business name and what you sell<input id="f-biz" name="biz" placeholder="e.g. Amani Hardware, building materials in Thika"></label>
+        <label for="f-msg">Anything else we should know?<textarea id="f-msg" name="msg" placeholder="Your goals, budget range, or links to your pages"></textarea></label>
+        <button class="btn primary" type="submit">Prepare my message</button>
+        <p class="note">Nothing is sent from this page. The button opens WhatsApp so you can review the message and send it yourself.</p>
+      </form>
+      <div class="ready" id="ready" hidden>
+        <b>Your message is ready</b>
+        <pre id="preview"></pre>
+        <div class="acts">
+          <a class="btn wa" id="wa-send" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+          <button class="btn ghost" type="button" id="edit">Edit details</button>
+        </div>
+        <p class="note">Prefer email? Write to bunifudigitalagency@gmail.com.</p>
       </div>
     </div>
-    <form id="f" novalidate>
-      <div class="row">
-        <label for="n">Your name<input id="n" autocomplete="name" placeholder="Wanjiru Mwangi"></label>
-        <label for="c">Business<input id="c" autocomplete="organization" placeholder="Company name"></label>
-      </div>
-      <div class="row">
-        <label for="e">Email or phone<input id="e" placeholder="you@company.co.ke"></label>
-        <label for="s">Main need
-          <select id="s"><option>Go-to-market strategy</option><option>Performance marketing</option><option>SEO &amp; AI search</option><option>Social &amp; content</option><option>Brand &amp; website</option><option>Automation &amp; CRO</option></select>
-        </label>
-      </div>
-      <label for="m">What do you want to achieve?<textarea id="m" placeholder="More leads, an online shop, a new launch..."></textarea></label>
-      <button class="btn primary" type="submit" style="justify-content:center">Prepare my brief</button>
-      <div class="out" id="out" role="status">
-        <b>Your brief is ready. Copy it and send it to the email above.</b>
-        <pre id="brief"></pre>
-        <button class="btn primary" type="button" id="cp" style="padding:10px 16px">Copy brief</button>
-      </div>
-    </form>
   </div>
-</section></main><footer>
+</section><section class="band contact" id="contact">
+  <div class="wrap contact-grid">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2>Let us talk about your next step.</h2>
+      <p class="lede">Call, message or email. We reply as soon as we can, usually within the same working day.</p>
+      <div class="contact-act">
+        <a class="btn wa" href="https://wa.me/254722822256?text=Hello%20Bunifu%20Digital%20Agency%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener">Chat on WhatsApp</a>
+        <a class="btn ghost" href="tel:+254722822256">Call us</a>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="cc"><div><small>Phone and WhatsApp</small><span class="v">0722 822 256</span></div><button type="button" data-copy="0722 822 256">Copy</button></div>
+      <div class="cc"><div><small>Email</small><span class="v">bunifudigitalagency@gmail.com</span></div><button type="button" data-copy="bunifudigitalagency@gmail.com">Copy</button></div>
+      <div class="cc"><div><small>Where</small><span class="v">Kenya, serving clients online</span></div></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <a class="footlogo" href="index.html" aria-label="Bunifu Digital Agency home"><img src="logo.jpg" alt="Bunifu Digital Agency logo"></a><p class="tagline">Creative ideas. Digital growth.</p>
-        <p style="margin-top:16px;max-width:42ch">Senior marketing strategists and a sharp creative team, planning, launching and improving full-funnel digital marketing for growing African brands.</p>
+        <img class="fl" src="logo.png" alt="Bunifu Digital Agency logo" width="150" height="150">
+        <p>Creative ideas. Digital growth.</p>
+        <p style="margin-top:10px;max-width:40ch">Social media management, graphic design, digital marketing and website development for growing Kenyan businesses.</p>
       </div>
-      <div><h4>Services</h4><ul><li><a href="services.html">Go-to-Market Strategy</a></li><li><a href="services.html">Performance Marketing</a></li><li><a href="services.html">SEO &amp; AI Search</a></li><li><a href="services.html">Social &amp; Content</a></li><li><a href="services.html">Brand &amp; Web</a></li><li><a href="services.html">Automation &amp; CRO</a></li></ul></div>
-      <div><h4>Company</h4><ul><li><a href="how-we-work.html">How we work</a></li><li><a href="about.html">About</a></li><li><a href="work.html">Work</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><h4>Services</h4><ul><li><a href="services.html">Social media management</a></li><li><a href="services.html">Graphic design &amp; branding</a></li><li><a href="services.html">Digital marketing &amp; ads</a></li><li><a href="services.html">Website development</a></li></ul></div>
+      <div><h4>Get in touch</h4><ul><li>0722 822 256</li><li>bunifudigitalagency@gmail.com</li><li><a href="faq.html">FAQ</a></li><li><a href="contact.html">Free audit</a></li></ul></div>
     </div>
-    <div class="copy"><span>© 2026 Bunifu Digital Agency. All rights reserved.</span><span>Nairobi, Kenya</span></div>
+    <div class="copy"><span>© <span id="yr">2026</span> Bunifu Digital Agency. All rights reserved.</span><span>Kenya</span></div>
   </div>
-</footer><script src="app.js"></script></body></html>
+</footer>
+<a class="wa-float" href="https://wa.me/254722822256?text=Hello%20Bunifu%20Digital%20Agency%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener" aria-label="Chat with Bunifu on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2A9.9 9.9 0 0 0 3.6 17.05L2 22l5.1-1.55A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.02.92.93-2.94-.2-.31a8.2 8.2 0 1 1 6.79 3.66Zm4.5-6.14c-.25-.12-1.46-.72-1.68-.8-.23-.08-.4-.12-.56.12-.17.25-.64.8-.78.96-.14.17-.29.19-.54.06a6.7 6.7 0 0 1-3.3-2.88c-.25-.43.25-.4.72-1.33.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07s.89 2.4 1 2.57c.12.17 1.76 2.68 4.25 3.76 1.59.69 2.2.75 3 .63.49-.07 1.46-.6 1.67-1.18.2-.58.2-1.08.14-1.18-.06-.1-.23-.17-.48-.29Z"/></svg><span>WhatsApp us</span>
+</a>
+<script src="site.js"></script>
+</body></html>
