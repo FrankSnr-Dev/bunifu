@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bunifudigitalagency.vercel.app/sitemap.xml
