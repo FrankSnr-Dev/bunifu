@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Bunifu Admin</title>
+<link rel="icon" href="/favicon.png">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#0d1330;--mut:#5b6486;--line:#dfe4f1;--blue:#0A5CFF;--red:#c62828;--ok:#128C4A}
+@media(prefers-color-scheme:dark){:root{--bg:#0a0f26;--card:#121a3b;--ink:#eef1ff;--mut:#9aa4cf;--line:#26305f;--blue:#4F8BFF}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;align-items:center;padding:8px 14px;flex-wrap:wrap}
+.top b{margin-right:10px}.top .sp{flex:1}
+.tab{border:0;background:none;padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--mut);font-weight:600}.tab.on{background:var(--blue);color:#fff}
+main{max-width:980px;margin:0 auto;padding:16px 14px 90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+h2{margin:6px 0 12px;font-size:20px}h3{margin:18px 0 8px;font-size:15px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+label{display:block;font-weight:600;font-size:13px;margin:10px 0 4px}
+input[type=text],input[type=password],input[type=email],input[type=date],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+textarea{min-height:70px;resize:vertical}
+.btn{border:0;background:var(--blue);color:#fff;padding:9px 16px;border-radius:8px;font-weight:600;cursor:pointer}.btn.g{background:none;color:var(--blue);border:1px solid var(--line)}.btn.r{background:var(--red)}.btn.sm{padding:5px 10px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:0 0 auto}.grow{flex:1 1 200px!important}
+.f{border-top:1px solid var(--line);padding:8px 0}.f:first-child{border-top:0}
+.tag{font:600 11px/1 ui-monospace,monospace;color:var(--mut);text-transform:uppercase}.dot{color:var(--ok)}
+.thumb{width:84px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:#8883}
+.save{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:10px;align-items:center;justify-content:center;z-index:6}
+.msg{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;z-index:20;max-width:90vw}
+.msg.err{background:var(--red);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.grid img{width:100%;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
+.modal{position:fixed;inset:0;background:#0009;z-index:30;display:flex;align-items:center;justify-content:center;padding:14px}.modal>div{background:var(--card);border-radius:12px;max-width:760px;width:100%;max-height:86vh;overflow:auto;padding:16px}
+.login{max-width:360px;margin:12vh auto}.mut{color:var(--mut);font-size:13px}.prev{border:1px dashed var(--line);border-radius:8px;padding:10px 14px;margin-top:8px}
+.prev h2,.prev h3{text-transform:none;color:var(--ink);letter-spacing:0}.prev .callout{background:#0a5cff14;padding:2px 12px;border-radius:8px}
+</style></head><body><div id="app"></div>
+<script>
+(function(){
+var app=document.getElementById('app'),state={page:'index',dirty:{},tab:'pages'};
+function h(t,p){var e=document.createElement(t);p=p||{};for(var k in p){if(k==='class')e.className=p[k];else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),p[k]);else if(k==='value')e.value=p[k];else if(p[k]!==false&&p[k]!=null)e.setAttribute(k,p[k]===true?'':p[k])}
+ for(var i=2;i<arguments.length;i++){var c=arguments[i];if(c==null||c===false)continue;if(Array.isArray(c))c.forEach(function(x){x&&e.appendChild(x)});else e.appendChild(typeof c==='string'?document.createTextNode(c):c)}return e}
+function toast(m,err){var t=h('div',{class:'msg'+(err?' err':'')},m);document.body.appendChild(t);setTimeout(function(){t.remove()},err?5000:2200)}
+function api(a,body,q){var o={method:body===undefined?'GET':'POST',headers:{'X-Requested-With':'admin','Content-Type':'application/json'},credentials:'same-origin'};if(body!==undefined)o.body=JSON.stringify(body);
+ return fetch('/api/admin?a='+a+(q||''),o).then(function(r){return r.json().catch(function(){return{error:'Server error'}}).then(function(j){if(r.status===401&&a!=='login'&&a!=='me'){boot();throw new Error('Please sign in.')}if(!r.ok)throw new Error(j.error||'Error');return j})})}
+function fail(e){toast(e.message||'Error',true)}
+function clear(){app.textContent=''}
+
+/* ---------- login ---------- */
+function login(){clear();var u=h('input',{type:'text',value:'admin',autocomplete:'username'}),p=h('input',{type:'password',autocomplete:'current-password'});
+ function go(ev){ev&&ev.preventDefault();api('login',{user:u.value,password:p.value}).then(boot).catch(fail)}
+ app.appendChild(h('form',{class:'card login',onsubmit:go},h('h2',{},'Bunifu admin'),h('p',{class:'mut'},'Sign in to edit your website.'),h('label',{},'Username'),u,h('label',{},'Password'),p,h('p',{},h('button',{class:'btn',type:'submit'},'Sign in'))))}
+
+/* ---------- shell ---------- */
+function shell(body){clear();var tabs=[['pages','Pages'],['blog','Blog'],['media','Media'],['settings','Settings']];
+ app.appendChild(h('div',{class:'top'},h('b',{},'Bunifu admin'),tabs.map(function(t){return h('button',{class:'tab'+(state.tab===t[0]?' on':''),onclick:function(){if(Object.keys(state.dirty).length&&!confirm('Discard unsaved changes?'))return;state.dirty={};state.tab=t[0];route()}},t[1])}),h('span',{class:'sp'}),h('a',{href:'/',target:'_blank',class:'btn g sm'},'View site')));
+ app.appendChild(h('main',{},body))}
+function route(){({pages:pages,blog:blog,media:media,settings:settings})[state.tab]()}
+function boot(){api('me').then(function(m){state.meta=m;route()}).catch(login)}
+
+/* ---------- image picker / upload ---------- */
+function shrink(file){return new Promise(function(res,rej){if(file.type==='image/gif'){var r0=new FileReader();r0.onload=function(){res({type:file.type,data:r0.result.split(',')[1]})};return r0.readAsDataURL(file)}
+ var img=new Image(),u=URL.createObjectURL(file);img.onload=function(){var s=Math.min(1,1600/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  var t=file.type==='image/png'?'image/png':'image/jpeg',d=c.toDataURL(t,.85);if(t==='image/png'&&d.length>4e6){t='image/jpeg';d=c.toDataURL(t,.85)}res({type:t,data:d.split(',')[1]})};img.onerror=function(){rej(new Error('Could not read that image'))};img.src=u})}
+function upload(file){return shrink(file).then(function(o){o.name=file.name;return api('upload',o)})}
+function pick(cb){var m=h('div',{class:'modal',onclick:function(e){if(e.target===m)m.remove()}}),box=h('div',{}),g=h('div',{class:'grid'}),fi=h('input',{type:'file',accept:'image/*',style:'display:none',onchange:function(){if(!fi.files[0])return;toast('Uploading…');upload(fi.files[0]).then(function(r){m.remove();cb(r.url)}).catch(fail)}});
+ box.appendChild(h('div',{class:'row'},h('h2',{class:'grow'},'Choose an image'),h('button',{class:'btn',onclick:function(){fi.click()}},'Upload new'),h('button',{class:'btn g',onclick:function(){m.remove()}},'Close'),fi));box.appendChild(g);m.appendChild(box);document.body.appendChild(m);
+ api('media').then(function(r){if(!r.files.length)g.appendChild(h('p',{class:'mut'},'No uploaded images yet.'));r.files.forEach(function(f){g.appendChild(h('img',{src:f.url,loading:'lazy',onclick:function(){m.remove();cb(f.url)}}))})}).catch(fail)}
+
+/* ---------- pages ---------- */
+function pages(){var sel=h('select',{onchange:function(){if(Object.keys(state.dirty).length&&!confirm('Discard unsaved changes?')){sel.value=state.page;return}state.dirty={};state.page=sel.value;pages()}});
+ Object.keys(state.meta.pages).forEach(function(k){var o=h('option',{value:k},state.meta.pages[k].label);if(k===state.page)o.selected=true;sel.appendChild(o)});
+ var q=h('input',{type:'text',placeholder:'Search text on this page…'}),list=h('div',{});shell([h('h2',{},'Edit pages'),h('div',{class:'row'},h('div',{class:'grow'},sel),h('div',{class:'grow'},q)),list]);
+ var bar=h('div',{class:'save'},h('span',{class:'mut',id:'cnt'},'No changes'),h('button',{class:'btn',onclick:save},'Save changes'));document.body.appendChild(bar);
+ var data;function save(){var set=Object.keys(state.dirty).map(function(i){return state.dirty[i]}),body={page:state.page,set:set.map(function(x){return{s:x.s,k:x.k,v:x.v}})};
+  if(state.metaDirty)body.meta={title:data.meta.title,description:data.meta.description};
+  if(!set.length&&!state.metaDirty)return toast('Nothing to save');api('savefields',body).then(function(){state.dirty={};state.metaDirty=false;toast('Saved. Live in about 30 seconds.');pages()}).catch(fail)}
+ function mark(){var n=Object.keys(state.dirty).length+(state.metaDirty?1:0);var c=document.getElementById('cnt');if(c)c.textContent=n?n+' unsaved change'+(n>1?'s':''):'No changes'}
+ function row(f,i){var key=f.s+f.k,cur=state.dirty[key]?state.dirty[key].v:f.val,inp,kind=f.kind;
+  function set(v){state.dirty[key]={s:f.s,k:f.k,v:v};mark()}
+  if(kind==='text'){inp=h('textarea',{oninput:function(){set(inp.value)}});inp.value=cur;inp.style.minHeight=(cur.length>90?110:44)+'px'}
+  else inp=h('input',{type:'text',value:cur,oninput:function(){set(inp.value);if(th)th.src=inp.value||''}});
+  var th=(kind==='src'||kind==='poster')&&!/\.(mp4|webm)(\?|$)/i.test(cur)?h('img',{class:'thumb',src:cur,alt:''}):null;
+  var lab=({text:f.tag==='a'||f.tag==='button'?'Button / link text':'Text ('+f.tag+')',href:'Link address',src:'Image / media file',poster:'Video cover image',alt:'Image description',placeholder:'Placeholder text'})[kind];
+  return h('div',{class:'f','data-q':(f.orig+' '+cur).toLowerCase()},h('div',{},h('span',{class:'tag'},lab),f.edited?h('span',{class:'dot'},' ● edited'):null),h('div',{class:'row'},h('div',{class:'grow'},inp),th,(kind==='src'||kind==='poster')?h('button',{class:'btn g sm',onclick:function(){pick(function(u){inp.value=u;set(u);if(th)th.src=u})}},'Choose image'):null,
+   f.edited||state.dirty[key]?h('button',{class:'btn g sm',onclick:function(){state.dirty[key]={s:f.s,k:f.k,v:null};mark();inp.value=f.orig;if(th)th.src=f.orig;toast('Will reset to original on save')}},'Reset'):null))}
+ api('fields',undefined,'&page='+state.page).then(function(d){data=d;
+  var meta=h('div',{class:'card'},h('h3',{},'Search listing (Google title and description)'),h('label',{},'Page title'),h('input',{type:'text',value:d.meta.title,oninput:function(e){d.meta.title=e.target.value;state.metaDirty=true;mark()}}),h('label',{},'Description'),h('textarea',{oninput:function(e){d.meta.description=e.target.value;state.metaDirty=true;mark()}}));meta.querySelector('textarea').value=d.meta.description;
+  var pg=d.items.filter(function(f){return f.s==='p'}),sh=d.items.filter(function(f){return f.s==='*'});
+  var c1=h('div',{class:'card'},h('h3',{},'This page'),pg.map(row)),c2=h('div',{class:'card'},h('h3',{},'Shown on every page (menu, footer, call-to-action, WhatsApp button)'),h('p',{class:'mut'},'Changes here appear on all pages. Phone, email and WhatsApp number are in Settings.'),sh.map(row));
+  list.appendChild(meta);list.appendChild(c1);list.appendChild(c2);
+  q.oninput=function(){var s=q.value.toLowerCase();list.querySelectorAll('.f').forEach(function(e){e.style.display=!s||e.getAttribute('data-q').indexOf(s)>=0?'':'none'})}}).catch(fail)}
+
+/* ---------- blog ---------- */
+function blog(){var box=h('div',{});shell([h('div',{class:'row'},h('h2',{class:'grow'},'Blog posts'),h('button',{class:'btn',onclick:function(){editPost(null)}},'New post')),box]);
+ api('posts').then(function(r){if(!r.posts.length)box.appendChild(h('p',{class:'mut'},'No posts yet.'));r.posts.forEach(function(p){box.appendChild(h('div',{class:'card row'},h('div',{class:'grow'},h('b',{},p.title),h('div',{class:'mut'},p.category+' · '+p.date+' · '+(p.status==='draft'?'DRAFT (hidden)':'Published'))),p.status!=='draft'?h('a',{class:'btn g sm',target:'_blank',href:'/blog/'+p.slug},'View'):null,h('button',{class:'btn sm',onclick:function(){editPost(p)}},'Edit')))})}).catch(fail)}
+function editPost(p){var isNew=!p;p=p||{title:'',slug:'',category:'Marketing',date:new Date().toISOString().slice(0,10),status:'published',c1:'#0A5CFF',c2:'#4B2A8E',cover:'',excerpt:'',body:''};
+ var f={};function inp(k,t){var e=h(t==='area'?'textarea':'input',t==='area'?{}:{type:t||'text'});e.value=p[k]||'';f[k]=e;return e}
+ var body=inp('body','area');body.style.minHeight='320px';var pv=h('div',{class:'prev',style:'display:none'});
+ var st=h('select',{},h('option',{value:'published'},'Published'),h('option',{value:'draft'},'Draft (hidden from visitors)'));st.value=p.status;f.status=st;
+ var cov=inp('cover'),th=h('img',{class:'thumb',src:p.cover||'',alt:''});
+ shell([h('h2',{},isNew?'New post':'Edit post'),h('div',{class:'card'},h('label',{},'Title'),inp('title'),h('label',{},'Short summary (shown on the blog cards and Google)'),inp('excerpt','area'),
+  h('div',{class:'row'},h('div',{class:'grow'},h('label',{},'Category'),inp('category')),h('div',{class:'grow'},h('label',{},'Date'),inp('date','date')),h('div',{class:'grow'},h('label',{},'Status'),st)),
+  h('label',{},'Web address (optional)'),inp('slug'),h('p',{class:'mut'},'Leave empty to create it from the title.'),
+  h('div',{class:'row'},h('div',{class:'grow'},h('label',{},'Card colour 1'),inp('c1','color')),h('div',{class:'grow'},h('label',{},'Card colour 2'),inp('c2','color'))),
+  h('label',{},'Cover image (optional)'),h('div',{class:'row'},h('div',{class:'grow'},cov),th,h('button',{class:'btn g sm',onclick:function(){pick(function(u){cov.value=u;th.src=u})}},'Choose image'),h('button',{class:'btn g sm',onclick:function(){cov.value='';th.removeAttribute('src')}},'Remove')),
+  h('label',{},'Article'),h('p',{class:'mut'},'Blank line = new paragraph. ## Heading, - list item, > highlighted note, **bold**, [text](link).'),body,
+  h('p',{},h('button',{class:'btn g',onclick:function(){api('preview',{body:body.value}).then(function(r){pv.style.display='';pv.innerHTML=r.html}).catch(fail)}},'Preview'),pv)),
+  h('div',{class:'row'},h('button',{class:'btn',onclick:function(){var o={oldSlug:isNew?'':p.slug};Object.keys(f).forEach(function(k){o[k]=f[k].value});api('savepost',o).then(function(){toast('Saved. Live in about 30 seconds.');blog()}).catch(fail)}},'Save post'),h('button',{class:'btn g',onclick:blog},'Cancel'),isNew?null:h('button',{class:'btn r',onclick:function(){if(confirm('Delete this post permanently?'))api('delpost',{slug:p.slug}).then(function(){toast('Deleted');blog()}).catch(fail)}},'Delete'))])}
+
+/* ---------- media ---------- */
+function media(){var g=h('div',{class:'grid'}),fi=h('input',{type:'file',accept:'image/*',multiple:true,style:'display:none',onchange:function(){var fs=[].slice.call(fi.files);toast('Uploading…');fs.reduce(function(pr,fl){return pr.then(function(){return upload(fl)})},Promise.resolve()).then(function(){toast('Uploaded');media()}).catch(fail)}});
+ shell([h('div',{class:'row'},h('h2',{class:'grow'},'Images'),h('button',{class:'btn',onclick:function(){fi.click()}},'Upload images'),fi),h('p',{class:'mut'},'Click an image to copy its address. Use “Choose image” in Pages or Blog to put it on the site. Videos cannot be uploaded here.'),g]);
+ api('media').then(function(r){if(!r.files.length)g.appendChild(h('p',{class:'mut'},'No uploaded images yet.'));r.files.forEach(function(f){g.appendChild(h('div',{},h('img',{src:f.url,loading:'lazy',onclick:function(){var u=f.url.indexOf('http')===0?f.url:location.origin+f.url;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){toast('Address copied')},function(){prompt('Copy this address',u)})}}),h('button',{class:'btn g sm',onclick:function(){if(confirm('Delete this image? Pages using it will show a broken image.'))api('delmedia',{url:f.url}).then(media).catch(fail)}},'Delete')))})}).catch(fail)}
+
+/* ---------- settings ---------- */
+function settings(){var box=h('div',{});shell([h('h2',{},'Settings'),box]);
+ api('settings').then(function(r){var s=r.settings,c=s.colors||{};
+  var ph=h('input',{type:'text',value:s.phone}),wa=h('input',{type:'text',value:s.wa}),em=h('input',{type:'email',value:s.email}),cols={};
+  var defs={blue:['Main blue','#0A5CFF'],cyan:['Accent cyan','#00A5FF'],violet:['Violet','#4B2A8E'],band:['Dark band','#0A1030']};
+  var ch=Object.keys(defs).map(function(k){var i=h('input',{type:'color',value:c[k]||defs[k][1]});cols[k]=i;return h('div',{},h('label',{},defs[k][0]),i)});
+  box.appendChild(h('div',{class:'card'},h('h3',{},'Contact details (updated everywhere)'),h('label',{},'Phone number shown on the site'),ph,h('label',{},'WhatsApp number (digits only, with country code)'),wa,h('label',{},'Email address'),em,
+   h('h3',{},'Brand colours'),h('div',{class:'row'},ch),h('p',{},h('button',{class:'btn',onclick:function(){var o={phone:ph.value,wa:wa.value,email:em.value,colors:{}};Object.keys(cols).forEach(function(k){o.colors[k]=cols[k].value});api('savesettings',{settings:o}).then(function(){toast('Saved. Live in about 30 seconds.')}).catch(fail)}},'Save settings'),' ',h('button',{class:'btn g',onclick:function(){if(confirm('Reset colours to the original brand colours?'))api('savesettings',{settings:{phone:ph.value,wa:wa.value,email:em.value,colors:{}}}).then(settings).catch(fail)}},'Reset colours'))));
+  var cu=h('input',{type:'password',autocomplete:'current-password'}),nw=h('input',{type:'password',autocomplete:'new-password'});
+  box.appendChild(h('div',{class:'card'},h('h3',{},'Change password'),h('label',{},'Current password'),cu,h('label',{},'New password (at least 10 characters)'),nw,h('p',{},h('button',{class:'btn',onclick:function(){api('password',{current:cu.value,next:nw.value}).then(function(){cu.value=nw.value='';toast('Password changed. Other devices are signed out.')}).catch(fail)}},'Change password'))));
+  var rf=h('input',{type:'file',accept:'.json',style:'display:none',onchange:function(){var fl=rf.files[0];if(!fl)return;var rd=new FileReader();rd.onload=function(){try{var j=JSON.parse(rd.result)}catch(e){return toast('Not a valid backup file',true)}if(confirm('Replace all current content with this backup?'))api('restore',j).then(function(){toast('Restored')}).catch(fail)};rd.readAsText(fl)}});
+  box.appendChild(h('div',{class:'card'},h('h3',{},'Backup'),h('p',{class:'mut'},'Download a copy of all your edits and posts, or restore one.'),h('div',{class:'row'},h('button',{class:'btn g',onclick:function(){api('backup').then(function(j){var a=h('a',{href:URL.createObjectURL(new Blob([JSON.stringify(j,null,1)],{type:'application/json'})),download:'bunifu-backup-'+new Date().toISOString().slice(0,10)+'.json'});document.body.appendChild(a);a.click();a.remove()}).catch(fail)}},'Download backup'),h('button',{class:'btn g',onclick:function(){rf.click()}},'Restore backup'),rf)));
+  box.appendChild(h('p',{},h('button',{class:'btn r',onclick:function(){api('logout',{}).then(login)}},'Sign out')))}).catch(fail)}
+boot();
+})();
+</script></body></html>

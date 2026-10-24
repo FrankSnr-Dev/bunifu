@@ -1,1 +1,106 @@
-{"framework":null,"buildCommand":null,"outputDirectory":".","cleanUrls":false}
+{
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "cleanUrls": false,
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "api/_templates/**",
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/page?p=index"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/api/page?p=index"
+    },
+    {
+      "source": "/about.html",
+      "destination": "/api/page?p=about"
+    },
+    {
+      "source": "/services.html",
+      "destination": "/api/page?p=services"
+    },
+    {
+      "source": "/how-we-work.html",
+      "destination": "/api/page?p=how-we-work"
+    },
+    {
+      "source": "/blog.html",
+      "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/faq.html",
+      "destination": "/api/page?p=faq"
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/api/page?p=contact"
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/api/page?p=privacy"
+    },
+    {
+      "source": "/blog",
+      "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/page?p=post&slug=:slug"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/page?p=sitemap"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/blog-social-media-mistakes.html",
+      "destination": "/blog/social-media-mistakes",
+      "permanent": true
+    },
+    {
+      "source": "/blog-website-or-instagram.html",
+      "destination": "/blog/website-or-instagram",
+      "permanent": true
+    },
+    {
+      "source": "/blog-whatsapp-business-sales.html",
+      "destination": "/blog/whatsapp-business-sales",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/admin(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 (function(){
   var $=function(id){return document.getElementById(id)};
-  var WA='254722822256';
+  var WA=document.body.getAttribute('data-wa')||'254722822256';
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var yr=$('yr');if(yr)yr.textContent=new Date().getFullYear();
 
