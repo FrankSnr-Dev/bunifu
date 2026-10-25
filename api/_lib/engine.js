@@ -35,16 +35,19 @@ function walk(html, ov, collect) {
   const bi = html.search(/<body[\s>]/i);
   const head = bi < 0 ? '' : html.slice(0, bi), body = bi < 0 ? html : html.slice(bi);
   let scope = 'p', depthEnd = null, last = '';
-  const get = (s, k) => { const o = ov && (s === '*' ? ov.shared : ov.page); return o && Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined; };
-  const seen = new Set();
+  const getOne = (s, k) => { const o = ov && (s === '*' ? ov.shared : ov.page); return o && Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined; };
+  const get = (s, k, bk) => { const v = getOne(s, k); return v === undefined && bk && bk !== k ? getOne(s, bk) : v; };
+  const seen = new Set(), cnt = {};
   const out = body.replace(TOK, (m) => {
     if (m[0] !== '<' || m === '<') {
       if (m === '<') return m;
       const t = m.trim();
       if (!t) return m;
-      const k = 'text|' + t;
-      if (collect && !seen.has(scope + k)) { seen.add(scope + k); collect.push({ s: scope, k, kind: 'text', tag: last, orig: unesc(t) }); }
-      const v = get(scope, k);
+      const bk = 'text|' + t;
+      let k = bk;
+      if (/\d/.test(t)) { const n = (cnt[scope + bk] = (cnt[scope + bk] || 0) + 1); if (n > 1) k = bk + '#' + n; }
+      if (collect && !seen.has(scope + k)) { seen.add(scope + k); collect.push({ s: scope, k, bk, kind: 'text', tag: last, orig: unesc(t) }); }
+      const v = get(scope, k, bk);
       if (v === undefined) return m;
       const lead = m.match(/^\s*/)[0], trail = m.match(/\s*$/)[0];
       return lead + esc(v) + trail;
@@ -150,6 +153,11 @@ async function renderPage(name) {
   let html = template(name);
   const m = (C.meta || {})[name] || {}, orig = metaOf(html);
   html = walk(html, { shared: C.shared, page: C.pages[name] || {} });
+  if (html.includes('<!--G-->')) {
+    const pr = walk(template('pricing'), { shared: C.shared, page: C.pages.pricing || {} });
+    const g = pr.match(new RegExp('<!--G:' + name + '-->([\\s\\S]*?)<!--/G-->'));
+    html = html.replace('<!--G-->', () => (g ? g[1] : ''));
+  }
   const pub = published(P);
   html = html.replace('<!--POSTS_TEASER-->', () => pub.slice(0, 3).map(card).join('')).replace('<!--POSTS_GRID-->', () => (pub.length ? pub.map(card).join('') : '<p>New articles are coming soon.</p>'));
   html = setMeta(html, m.title || orig.title, m.description || orig.description, BASE + PAGES[name].path);
@@ -193,7 +201,9 @@ async function fieldsFor(name) {
   walk(template(name), { shared: {}, page: {} }, list);
   const seenShared = new Set();
   const items = list.map((f) => {
-    const cur = (f.s === '*' ? C.shared : C.pages[name] || {})[f.k];
+    const bucket = f.s === '*' ? C.shared : C.pages[name] || {};
+    let cur = bucket[f.k];
+    if (cur === undefined && f.bk && f.bk !== f.k) cur = bucket[f.bk];
     return { s: f.s, k: f.k, kind: f.kind, tag: f.tag, orig: f.orig, val: cur === undefined ? f.orig : cur, edited: cur !== undefined };
   });
   const m = (C.meta || {})[name] || {}, o = metaOf(template(name));
