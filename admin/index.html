@@ -46,7 +46,7 @@ function login(){clear();var u=h('input',{type:'text',value:'admin',autocomplete
  app.appendChild(h('form',{class:'card login',onsubmit:go},h('h2',{},'Bunifu admin'),h('p',{class:'mut'},'Sign in to edit your website.'),h('label',{},'Username'),u,h('label',{},'Password'),p,h('p',{},h('button',{class:'btn',type:'submit'},'Sign in'))))}
 
 /* ---------- shell ---------- */
-function shell(body){clear();var tabs=[['pages','Pages'],['blog','Blog'],['media','Media'],['settings','Settings']];
+function shell(body){clear();document.querySelectorAll('.save').forEach(function(e){e.remove()});var tabs=[['pages','Pages'],['blog','Blog'],['media','Media'],['settings','Settings']];
  app.appendChild(h('div',{class:'top'},h('b',{},'Bunifu admin'),tabs.map(function(t){return h('button',{class:'tab'+(state.tab===t[0]?' on':''),onclick:function(){if(Object.keys(state.dirty).length&&!confirm('Discard unsaved changes?'))return;state.dirty={};state.tab=t[0];route()}},t[1])}),h('span',{class:'sp'}),h('a',{href:'/',target:'_blank',class:'btn g sm'},'View site')));
  app.appendChild(h('main',{},body))}
 function route(){({pages:pages,blog:blog,media:media,settings:settings})[state.tab]()}
