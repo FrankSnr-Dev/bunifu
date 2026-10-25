@@ -19,6 +19,10 @@
       "destination": "/api/page?p=index"
     },
     {
+      "source": "/pricing.html",
+      "destination": "/api/page?p=pricing"
+    },
+    {
       "source": "/about.html",
       "destination": "/api/page?p=about"
     },

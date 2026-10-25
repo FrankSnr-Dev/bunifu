@@ -299,3 +299,25 @@ header.stuck{box-shadow:0 10px 30px -18px rgba(10,16,48,.5)}
 .pc-cover.has-img::before,.pc-cover.has-img::after{display:none}
 .pc-cover.has-img b{z-index:1}
 .prose blockquote{margin:1.4em 0;padding:14px 18px;border-left:4px solid var(--blue);background:rgba(10,92,255,.07);border-radius:10px}
+
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.plans.one{grid-template-columns:minmax(0,1fr)}
+.plan{position:relative;display:flex;flex-direction:column;gap:14px;padding:30px 28px;background:var(--surface);border:1px solid var(--line);border-radius:20px;transition:transform .2s,border-color .2s}
+.plan:hover{transform:translateY(-4px);border-color:var(--blue)}
+.plan.pop{border:2px solid var(--blue);box-shadow:0 18px 50px -24px var(--blue)}
+.plan .badge{position:absolute;top:-13px;left:28px;background:var(--blue);color:var(--on-blue);font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:999px}
+.plan h3{font-size:24px;font-weight:800}
+.plan .pblurb{color:var(--muted);font-size:16px;margin:0}
+.plan .price{margin:4px 0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.plan .price small{font:500 13px/1 var(--mono);color:var(--muted);text-transform:uppercase}
+.plan .price b{font-size:clamp(30px,4vw,40px);font-weight:800;letter-spacing:-.02em}
+.plan .price .per{color:var(--muted);font-size:16px}
+.plan ul{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:10px}
+.plan li{position:relative;padding-left:28px;font-size:16px}
+.plan li::before{content:"";position:absolute;left:0;top:.35em;width:16px;height:16px;border-radius:50%;background:var(--blue)}
+.plan li::after{content:"";position:absolute;left:5px;top:calc(.35em + 4px);width:5px;height:8px;border:solid var(--on-blue);border-width:0 2px 2px 0;transform:rotate(45deg) scale(.8);transform-origin:center}
+.plan .btn{margin-top:auto}
+.plan.wide{max-width:640px}
+.pnote{margin-top:28px;color:var(--muted);font-size:15px;max-width:70ch}
+@media(max-width:900px){.plans{grid-template-columns:1fr}.plan.wide{max-width:none}}
+.band.alt{background:rgba(10,92,255,.05)}
