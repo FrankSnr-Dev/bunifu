@@ -11,7 +11,10 @@ module.exports = async (req, res) => {
       res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=600');
       return res.status(200).send(await engine.sitemap());
     }
-    if (p === 'post') html = await engine.renderPost(String(q.slug || ''));
+    if (p === 'post') {
+      html = await engine.renderPost(String(q.slug || ''));
+      if (!html) { const to = await engine.postRedirect(String(q.slug || '')); if (to) { res.setHeader('Location', to); return res.status(301).end(); } }
+    }
     else html = await engine.renderPage(p);
     if (!html) { html = await engine.renderNotFound(); status = 404; }
     res.setHeader('Content-Type', 'text/html; charset=utf-8');

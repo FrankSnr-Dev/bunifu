@@ -169,6 +169,11 @@ async function renderPost(slug) {
   html = setMeta(html, p.title + ' | Bunifu Digital Agency', p.excerpt, BASE + '/blog/' + p.slug, p.cover ? absUrl(p.cover) : '', 'article');
   return finish(html, S);
 }
+async function postRedirect(slug) {
+  const P = published(await getPosts());
+  const m = P.find((x) => (x.prev || []).includes(slug));
+  return m ? '/blog/' + m.slug : null;
+}
 async function renderNotFound() {
   const [C, S] = await Promise.all([getContent(), getSettings()]);
   let html = walk(template('notfound'), { shared: C.shared, page: {} });
@@ -196,4 +201,4 @@ async function fieldsFor(name) {
 }
 function tplText(name) { return template(name); }
 
-module.exports = { PAGES, DEF_SETTINGS, esc, md, safeUrl, getContent, getSettings, getPosts, renderPage, renderPost, renderNotFound, sitemap, fieldsFor, walk, tplText, published };
+module.exports = { PAGES, DEF_SETTINGS, esc, md, safeUrl, getContent, getSettings, getPosts, renderPage, renderPost, postRedirect, renderNotFound, sitemap, fieldsFor, walk, tplText, published };

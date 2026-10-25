@@ -77,7 +77,13 @@ module.exports = async (req, res) => {
       if (P.some((x, i) => x.slug === slug && i !== old)) return send(400, { error: 'Another post already uses the address "' + slug + '".' });
       const rec = { slug, title, category: str(b.category, 40) || 'General', date: /^\d{4}-\d{2}-\d{2}$/.test(b.date || '') ? b.date : new Date().toISOString().slice(0, 10),
         status: b.status === 'draft' ? 'draft' : 'published', c1: str(b.c1, 9), c2: str(b.c2, 9), cover: str(b.cover, 1000), excerpt: str(b.excerpt, 400), body: str(b.body, 60000) };
-      if (old >= 0) P[old] = rec; else P.unshift(rec);
+      if (old >= 0) {
+        const prev = new Set(P[old].prev || []);
+        if (P[old].slug !== slug) prev.add(P[old].slug);
+        prev.delete(slug);
+        rec.prev = Array.from(prev).slice(-10);
+        P[old] = rec;
+      } else P.unshift(rec);
       await store.writeJSON('cms/posts.json', P);
       return send(200, { ok: true, slug });
     }

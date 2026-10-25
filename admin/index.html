@@ -88,14 +88,15 @@ function pages(){var sel=h('select',{onchange:function(){if(Object.keys(state.di
 /* ---------- blog ---------- */
 function blog(){var box=h('div',{});shell([h('div',{class:'row'},h('h2',{class:'grow'},'Blog posts'),h('button',{class:'btn',onclick:function(){editPost(null)}},'New post')),box]);
  api('posts').then(function(r){if(!r.posts.length)box.appendChild(h('p',{class:'mut'},'No posts yet.'));r.posts.forEach(function(p){box.appendChild(h('div',{class:'card row'},h('div',{class:'grow'},h('b',{},p.title),h('div',{class:'mut'},p.category+' · '+p.date+' · '+(p.status==='draft'?'DRAFT (hidden)':'Published'))),p.status!=='draft'?h('a',{class:'btn g sm',target:'_blank',href:'/blog/'+p.slug},'View'):null,h('button',{class:'btn sm',onclick:function(){editPost(p)}},'Edit')))})}).catch(fail)}
+function slugify(s){var t=String(s||'').toLowerCase().replace(/https?:\/\/\S+/g,' ').replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(vercel\.app|co\.ke|com|org|net|ke)\b/g,' ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');if(t.length>60){t=t.slice(0,60);var i=t.lastIndexOf('-');if(i>25)t=t.slice(0,i)}return t.replace(/-+$/,'')}
 function editPost(p){var isNew=!p;p=p||{title:'',slug:'',category:'Marketing',date:new Date().toISOString().slice(0,10),status:'published',c1:'#0A5CFF',c2:'#4B2A8E',cover:'',excerpt:'',body:''};
- var f={};function inp(k,t){var e=h(t==='area'?'textarea':'input',t==='area'?{}:{type:t||'text'});e.value=p[k]||'';f[k]=e;return e}
+ var f={};var slugTouched=!isNew;function inp(k,t){var e=h(t==='area'?'textarea':'input',t==='area'?{}:{type:t||'text'});e.value=p[k]||'';f[k]=e;return e}
  var body=inp('body','area');body.style.minHeight='320px';var pv=h('div',{class:'prev',style:'display:none'});
  var st=h('select',{},h('option',{value:'published'},'Published'),h('option',{value:'draft'},'Draft (hidden from visitors)'));st.value=p.status;f.status=st;
  var cov=inp('cover'),th=h('img',{class:'thumb',src:p.cover||'',alt:''});
  shell([h('h2',{},isNew?'New post':'Edit post'),h('div',{class:'card'},h('label',{},'Title'),inp('title'),h('label',{},'Short summary (shown on the blog cards and Google)'),inp('excerpt','area'),
   h('div',{class:'row'},h('div',{class:'grow'},h('label',{},'Category'),inp('category')),h('div',{class:'grow'},h('label',{},'Date'),inp('date','date')),h('div',{class:'grow'},h('label',{},'Status'),st)),
-  h('label',{},'Web address (optional)'),inp('slug'),h('p',{class:'mut'},'Leave empty to create it from the title.'),
+  h('label',{},'Web address'),h('div',{class:'row'},h('div',{class:'grow'},inp('slug')),h('button',{class:'btn g sm',onclick:function(){f.slug.value=slugify(f.title.value)}},'Make from title')),h('p',{class:'mut'},'Created from the title when empty. Changing it keeps the old link working (it redirects).'),
   h('div',{class:'row'},h('div',{class:'grow'},h('label',{},'Card colour 1'),inp('c1','color')),h('div',{class:'grow'},h('label',{},'Card colour 2'),inp('c2','color'))),
   h('label',{},'Cover image (optional)'),h('div',{class:'row'},h('div',{class:'grow'},cov),th,h('button',{class:'btn g sm',onclick:function(){pick(function(u){cov.value=u;th.src=u})}},'Choose image'),h('button',{class:'btn g sm',onclick:function(){cov.value='';th.removeAttribute('src')}},'Remove')),
   h('label',{},'Article'),h('p',{class:'mut'},'Blank line = new paragraph. ## Heading, - list item, > highlighted note, **bold**, [text](link), ![description](image address).'),body,
