@@ -325,3 +325,4 @@ header.stuck{box-shadow:0 10px 30px -18px rgba(10,16,48,.5)}
 .svc{position:relative}.svc a::after{content:"";position:absolute;inset:0;border-radius:18px}
 .svc a{cursor:pointer}
 .svc:not(:has(a)):hover{transform:none;border-color:var(--line)}
+.fgrid .brand{margin-bottom:16px}.fgrid .brand b{color:var(--ink)}
