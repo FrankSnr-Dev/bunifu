@@ -119,13 +119,17 @@ function card(p) {
 const published = (posts) => posts.filter((p) => p.status !== 'draft').sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
 /* ---------- page assembly ---------- */
-function setMeta(html, title, desc, url) {
+function absUrl(u) { u = safeUrl(u); return /^https?:\/\//i.test(u) ? u : BASE + (u.startsWith('/') ? '' : '/') + u; }
+function setMeta(html, title, desc, url, image, type) {
   const t = esc(title), d = esc(desc);
   html = html.replace(/<title>[\s\S]*?<\/title>/, () => '<title>' + t + '</title>');
   html = html.replace(/(<meta name="description" content=")[^"]*(")/, (m, a, b) => a + d + b);
   html = html.replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, b) => a + t + b);
   html = html.replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, b) => a + d + b);
-  return html.replace(/(<link rel="canonical" href=")[^"]*(")/, (m, a, b) => a + esc(url) + b);
+  html = html.replace(/(<link rel="canonical" href=")[^"]*(")/, (m, a, b) => a + esc(url) + b);
+  const img = esc(image || BASE + '/logo.png');
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, () => '<meta property="og:image" content="' + img + '"><meta property="og:image:alt" content="' + t + '"><meta property="og:url" content="' + esc(url) + '"><meta property="og:site_name" content="Bunifu Digital Agency"><meta name="twitter:card" content="' + (image ? 'summary_large_image' : 'summary') + '"><meta name="twitter:title" content="' + t + '"><meta name="twitter:description" content="' + d + '"><meta name="twitter:image" content="' + img + '">');
+  return html.replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, b) => a + (type || 'website') + b);
 }
 function finish(html, S) {
   const c = S.colors || {};
@@ -162,7 +166,7 @@ async function renderPost(slug) {
     .replace('<!--POST_BODY-->', () => (p.cover ? '<p><img src="' + esc(safeUrl(p.cover)) + '" alt="' + esc(p.title) + '" style="max-width:100%;border-radius:14px"></p>' : '') + md(p.body))
     .replace('<!--MORE_POSTS-->', () => more);
   if (!more) html = html.replace(/<div class="more-posts">[\s\S]*?<\/ul><\/div>/, '');
-  html = setMeta(html, p.title + ' | Bunifu Digital Agency', p.excerpt, BASE + '/blog/' + p.slug);
+  html = setMeta(html, p.title + ' | Bunifu Digital Agency', p.excerpt, BASE + '/blog/' + p.slug, p.cover ? absUrl(p.cover) : '', 'article');
   return finish(html, S);
 }
 async function renderNotFound() {
