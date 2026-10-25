@@ -321,3 +321,7 @@ header.stuck{box-shadow:0 10px 30px -18px rgba(10,16,48,.5)}
 .pnote{margin-top:28px;color:var(--muted);font-size:15px;max-width:70ch}
 @media(max-width:900px){.plans{grid-template-columns:1fr}.plan.wide{max-width:none}}
 .band.alt{background:rgba(10,92,255,.05)}
+
+.svc{position:relative}.svc a::after{content:"";position:absolute;inset:0;border-radius:18px}
+.svc a{cursor:pointer}
+.svc:not(:has(a)):hover{transform:none;border-color:var(--line)}

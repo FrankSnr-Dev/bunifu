@@ -52,7 +52,8 @@
   if(form){
     var sel=$('f-svc'),ready=$('ready');
     try{var want=new URLSearchParams(location.search).get('service');
-      if(want){for(var i=0;i<sel.options.length;i++){if(sel.options[i].text===want)sel.selectedIndex=i}}}catch(e){}
+      if(want){for(var i=0;i<sel.options.length;i++){if(sel.options[i].text===want)sel.selectedIndex=i}}
+      var plan=new URLSearchParams(location.search).get('plan'),pm=$('f-msg');if(plan&&pm&&!pm.value)pm.value='Interested in the '+plan+'.';}catch(e){}
     var bad=function(id,msg){$(id).textContent=msg;return !msg};
     form.addEventListener('submit',function(e){
       e.preventDefault();

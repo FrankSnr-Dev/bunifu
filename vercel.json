@@ -23,6 +23,10 @@
       "destination": "/api/page?p=pricing"
     },
     {
+      "source": "/services/:slug",
+      "destination": "/api/page?p=:slug"
+    },
+    {
       "source": "/about.html",
       "destination": "/api/page?p=about"
     },

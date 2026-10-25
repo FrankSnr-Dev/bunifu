@@ -8,7 +8,7 @@ const TDIR = path.join(__dirname, '..', '_templates');
 const BASE = 'https://bunifudigitalagency.vercel.app';
 const PAGES = {
   index: { path: '/', label: 'Home' }, about: { path: '/about.html', label: 'About' },
-  services: { path: '/services.html', label: 'Services' }, 'how-we-work': { path: '/how-we-work.html', label: 'How we work' }, pricing: { path: '/pricing.html', label: 'Pricing' },
+  services: { path: '/services.html', label: 'Services' }, 'how-we-work': { path: '/how-we-work.html', label: 'How we work' }, pricing: { path: '/pricing.html', label: 'Pricing' }, 'social-media-management': { path: '/services/social-media-management', label: 'Service: Social media management' }, 'graphic-design-branding': { path: '/services/graphic-design-branding', label: 'Service: Graphic design and branding' }, 'digital-marketing-ads': { path: '/services/digital-marketing-ads', label: 'Service: Digital marketing and ads' }, 'website-development': { path: '/services/website-development', label: 'Service: Website development' }, 'app-development': { path: '/services/app-development', label: 'Service: App development' }, 'search-local-visibility': { path: '/services/search-local-visibility', label: 'Service: Search and local visibility' }, 'short-video-content': { path: '/services/short-video-content', label: 'Service: Short video and content' },
   blog: { path: '/blog', label: 'Blog page' }, faq: { path: '/faq.html', label: 'FAQ' },
   contact: { path: '/contact.html', label: 'Contact' }, privacy: { path: '/privacy.html', label: 'Privacy Policy' },
 };
