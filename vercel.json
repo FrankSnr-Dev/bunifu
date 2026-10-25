@@ -15,48 +15,40 @@
       "destination": "/api/page?p=index"
     },
     {
-      "source": "/index.html",
-      "destination": "/api/page?p=index"
-    },
-    {
-      "source": "/pricing.html",
-      "destination": "/api/page?p=pricing"
-    },
-    {
-      "source": "/services/:slug",
-      "destination": "/api/page?p=:slug"
-    },
-    {
-      "source": "/about.html",
+      "source": "/about",
       "destination": "/api/page?p=about"
     },
     {
-      "source": "/services.html",
+      "source": "/services",
       "destination": "/api/page?p=services"
     },
     {
-      "source": "/how-we-work.html",
+      "source": "/how-we-work",
       "destination": "/api/page?p=how-we-work"
     },
     {
-      "source": "/blog.html",
-      "destination": "/api/page?p=blog"
-    },
-    {
-      "source": "/faq.html",
-      "destination": "/api/page?p=faq"
-    },
-    {
-      "source": "/contact.html",
-      "destination": "/api/page?p=contact"
-    },
-    {
-      "source": "/privacy.html",
-      "destination": "/api/page?p=privacy"
+      "source": "/pricing",
+      "destination": "/api/page?p=pricing"
     },
     {
       "source": "/blog",
       "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/faq",
+      "destination": "/api/page?p=faq"
+    },
+    {
+      "source": "/contact",
+      "destination": "/api/page?p=contact"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/api/page?p=privacy"
+    },
+    {
+      "source": "/services/:slug",
+      "destination": "/api/page?p=:slug"
     },
     {
       "source": "/blog/:slug",
@@ -72,6 +64,51 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/services.html",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/how-we-work.html",
+      "destination": "/how-we-work",
+      "permanent": true
+    },
+    {
+      "source": "/pricing.html",
+      "destination": "/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/blog.html",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/faq.html",
+      "destination": "/faq",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/privacy",
+      "permanent": true
+    },
     {
       "source": "/blog-social-media-mistakes.html",
       "destination": "/blog/social-media-mistakes",
