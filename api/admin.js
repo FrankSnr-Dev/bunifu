@@ -4,7 +4,11 @@ const engine = require('./_lib/engine');
 const auth = require('./_lib/auth');
 const store = require('./_lib/store');
 
-const slugify = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70);
+const slugify = (s) => {
+  let t = String(s || '').toLowerCase().replace(/https?:\/\/\S+/g, ' ').replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(vercel\.app|co\.ke|com|org|net|ke)\b/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  if (t.length > 60) { t = t.slice(0, 60); const i = t.lastIndexOf('-'); if (i > 25) t = t.slice(0, i); }
+  return t.replace(/-+$/, '');
+};
 const str = (v, n) => String(v == null ? '' : v).slice(0, n);
 const OK_IMG = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
 
