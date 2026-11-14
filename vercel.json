@@ -65,6 +65,17 @@
   ],
   "redirects": [
     {
+      "source": "/((?!googlead707e8dd5dced04\\.html).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "bunifudigitalagency.vercel.app"
+        }
+      ],
+      "destination": "https://bunifudigitalagency.co.ke/$1",
+      "permanent": true
+    },
+    {
       "source": "/index.html",
       "destination": "/",
       "permanent": true
