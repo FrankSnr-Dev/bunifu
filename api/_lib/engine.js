@@ -12,7 +12,7 @@ const PAGES = {
   blog: { path: '/blog', label: 'Blog page' }, faq: { path: '/faq', label: 'FAQ' },
   contact: { path: '/contact', label: 'Contact' }, privacy: { path: '/privacy', label: 'Privacy Policy' },
 };
-const DEF_SETTINGS = { phone: '0722 822 256', wa: '254722822256', email: 'bunifudigitalagency@gmail.com', colors: {} };
+const DEF_SETTINGS = { phone: '0722 822 256', wa: '254722822256', email: 'marketing@bunifudigitalagency.co.ke', colors: {} };
 
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const unesc = (s) => String(s).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&');
@@ -140,7 +140,7 @@ function finish(html, S) {
   if (css) html = html.replace('</head>', () => '<style>:root,:root[data-theme="dark"]{' + css + '}</style></head>');
   if (/^#[0-9a-fA-F]{6}$/.test(c.blue || '')) html = html.replace(/(<meta name="theme-color" content=")[^"]*(")/, (m, a, b) => a + c.blue + b);
   const digits = String(S.wa || '').replace(/\D/g, '') || DEF_SETTINGS.wa;
-  html = html.replace(/\+254722822256|254722822256|0722 822 256|bunifudigitalagency@gmail\.com/g, (m) => (m === '+254722822256' ? '+' + digits : m === '254722822256' ? digits : m === '0722 822 256' ? S.phone : S.email));
+  html = html.replace(/\+254722822256|254722822256|0722 822 256|marketing@bunifudigitalagency\.co\.ke/g, (m) => (m === '+254722822256' ? '+' + digits : m === '254722822256' ? digits : m === '0722 822 256' ? S.phone : S.email));
   return html;
 }
 function metaOf(html) {
