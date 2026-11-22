@@ -326,3 +326,6 @@ header.stuck{box-shadow:0 10px 30px -18px rgba(10,16,48,.5)}
 .svc a{cursor:pointer}
 .svc:not(:has(a)):hover{transform:none;border-color:var(--line)}
 .fgrid .brand{margin-bottom:16px}.fgrid .brand b{color:var(--ink)}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.svc .price{margin-top:12px;font-size:15px}.svc .price b{font:800 24px/1 var(--display)}

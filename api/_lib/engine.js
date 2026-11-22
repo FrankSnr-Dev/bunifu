@@ -117,7 +117,7 @@ const mins = (p) => Math.max(1, Math.round(String(p.body || '').split(/\s+/).len
 const cssColor = (c, d) => (/^#[0-9a-fA-F]{3,8}$/.test(c || '') ? c : d);
 function card(p) {
   const img = p.cover ? '<img src="' + esc(safeUrl(p.cover)) + '" alt="" loading="lazy">' : '';
-  return '<a class="post-card" href="/blog/' + esc(p.slug) + '"><div class="pc-cover' + (p.cover ? ' has-img' : '') + '" style="--c1:' + cssColor(p.c1, '#0A5CFF') + ';--c2:' + cssColor(p.c2, '#4B2A8E') + '">' + img + '<b>' + esc(p.category) + '</b></div><div class="pc-body"><span class="meta">' + fmtDate(p.date) + ' · ' + mins(p) + ' min read</span><h3>' + esc(p.title) + '</h3><p>' + esc(p.excerpt) + '</p><span class="go">Read article →</span></div></a>';
+  return '<a class="post-card" href="/blog/' + esc(p.slug) + '"><div class="pc-cover' + (p.cover ? ' has-img' : '') + '" style="--c1:' + cssColor(p.c1, '#0A5CFF') + ';--c2:' + cssColor(p.c2, '#4B2A8E') + '">' + img + '<b>' + esc(p.category) + '</b></div><div class="pc-body"><span class="meta">' + fmtDate(p.date) + ' · ' + mins(p) + ' min read</span><h3>' + esc(p.title) + '</h3><p>' + esc(p.excerpt) + '</p><span class="go">Read article<span class="sr">: ' + esc(p.title) + '</span> →</span></div></a>';
 }
 const published = (posts) => posts.filter((p) => p.status !== 'draft').sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
@@ -130,8 +130,8 @@ function setMeta(html, title, desc, url, image, type) {
   html = html.replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, b) => a + t + b);
   html = html.replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, b) => a + d + b);
   html = html.replace(/(<link rel="canonical" href=")[^"]*(")/, (m, a, b) => a + esc(url) + b);
-  const img = esc(image || BASE + '/logo.png');
-  html = html.replace(/<meta property="og:image" content="[^"]*">/, () => '<meta property="og:image" content="' + img + '"><meta property="og:image:alt" content="' + t + '"><meta property="og:url" content="' + esc(url) + '"><meta property="og:site_name" content="Bunifu Digital Agency"><meta name="twitter:card" content="' + (image ? 'summary_large_image' : 'summary') + '"><meta name="twitter:title" content="' + t + '"><meta name="twitter:description" content="' + d + '"><meta name="twitter:image" content="' + img + '">');
+  const img = esc(image || BASE + '/og-banner.png');
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, () => '<meta property="og:image" content="' + img + '"><meta property="og:image:alt" content="' + t + '"><meta property="og:url" content="' + esc(url) + '"><meta property="og:site_name" content="Bunifu Digital Agency"><meta name="twitter:card" content="' + 'summary_large_image' + '"><meta name="twitter:title" content="' + t + '"><meta name="twitter:description" content="' + d + '"><meta name="twitter:image" content="' + img + '">');
   return html.replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, b) => a + (type || 'website') + b);
 }
 function finish(html, S) {
